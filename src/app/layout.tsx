@@ -1,9 +1,12 @@
+'use client';
+
 import './globals.css'
 import type { Metadata } from 'next'
 import { DM_Sans } from 'next/font/google'
 import Navbar from '@/components/layout/Navbar'
 import ScrollToTop from '@/components/layout/ScrollToTop'
 import Footer from '@/components/Footer'
+import ClientWrapper from '@/components/layout/ClientWrapper'
 
 const dmSans = DM_Sans({ 
   subsets: ['latin'],
@@ -25,10 +28,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`min-h-screen bg-black text-white antialiased ${dmSans.variable}`}>
-        <Navbar />
-        {children}
-        <Footer />
-        <ScrollToTop />
+        <ClientWrapper>
+          <Navbar />
+          {children}
+          <Footer />
+          <ScrollToTop />
+        </ClientWrapper>
       </body>
     </html>
   )
