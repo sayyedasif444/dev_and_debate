@@ -9,6 +9,9 @@ export default function Preloader() {
   const [animationComplete, setAnimationComplete] = useState(false);
 
   useEffect(() => {
+    // Disable scrolling at start
+    document.body.style.overflow = 'hidden';
+    
     // Simulate progressive loading
     const interval = setInterval(() => {
       setProgress((prev) => {
@@ -23,6 +26,8 @@ export default function Preloader() {
             // After the fade-out animation completes, set animationComplete to true
             setTimeout(() => {
               setAnimationComplete(true);
+              // Enable scrolling when animation is complete
+              document.body.style.overflow = 'visible';
             }, 800); // Match this to the fade-out animation duration
           }, 500); // Short delay after reaching 100%
           
@@ -32,7 +37,11 @@ export default function Preloader() {
       });
     }, 150);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      // Ensure scrolling is re-enabled if component unmounts
+      document.body.style.overflow = 'visible';
+    };
   }, []);
 
   // If animation is complete, don't render anything
@@ -47,6 +56,11 @@ export default function Preloader() {
           animate={{ opacity: loading ? 1 : 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: 'easeInOut' }}
+          onAnimationComplete={() => {
+            if (!loading) {
+              document.body.style.overflow = 'visible';
+            }
+          }}
         >
           {/* Creative geometric shape animation */}
           <div className="relative w-40 h-40 mb-8">
