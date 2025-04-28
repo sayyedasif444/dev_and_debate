@@ -1,12 +1,7 @@
-'use client';
-
 import './globals.css'
 import type { Metadata } from 'next'
 import { DM_Sans } from 'next/font/google'
-import Navbar from '@/components/layout/Navbar'
-import ScrollToTop from '@/components/layout/ScrollToTop'
-import Footer from '@/components/Footer'
-import ClientWrapper from '@/components/layout/ClientWrapper'
+import ClientLayout from '@/components/layout/ClientLayout'
 
 const dmSans = DM_Sans({ 
   subsets: ['latin'],
@@ -15,9 +10,9 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'Dev & Debate | Build Digital Presence, Learn & Innovate Together',
-  description: 'Dev & Debate empowers creators and businesses with tailored learning programs, digital development services, and strategic support. Build, launch, and grow with confidence — plus discover tools and reviews that inspire fresh ideas.',
-  keywords: 'build digital presence, website development services, learn coding online, tech mentorship programs, collaborative digital solutions, innovation and tech consulting, storytelling for brands, code learning community, startup tech support services, grow together, collaborative innovation',
+  title: 'Dev & Debate | Build, Learn, and Grow Your Digital Presence',
+  description: 'Discover Dev & Debate — where coding, creativity, and collaboration meet. Build your digital presence, learn new skills, and explore creative ideas.',
+  keywords: 'web development, digital presence, coding mentorship, build websites, portfolio development, learning coding, creative tech, Dev and Debate',
 }
 
 export default function RootLayout({
@@ -28,12 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`min-h-screen bg-black text-white antialiased ${dmSans.variable}`}>
-        <ClientWrapper>
-          <Navbar />
+        <ClientLayout>
           {children}
-          <Footer />
-          <ScrollToTop />
-        </ClientWrapper>
+        </ClientLayout>
       </body>
     </html>
   )

@@ -58,7 +58,6 @@ export default function ServicesContent() {
 
   return (
     <AnimatePresence>
-      {isLoaded && (
         <motion.main
           variants={containerVariants}
           initial="hidden"
@@ -98,7 +97,6 @@ export default function ServicesContent() {
             </motion.div>
           </div>
         </motion.main>
-      )}
     </AnimatePresence>
   );
 } 

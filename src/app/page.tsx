@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Hero from '@/components/home/Hero';
 import Explore from '@/components/home/Explore';
 import MiddleCta from '@/components/home/MiddleCta';
@@ -9,8 +9,12 @@ import BuiltForBuilders from '@/components/home/BuiltForBuilders';
 import Testimonials from '@/components/home/Testimonials';
 import LetsBuildTogether from '@/components/home/LetsBuildTogether';
 import StayInTheLoop from '@/components/home/StayInTheLoop';
+import { useLoading } from '@/components/layout/LoadingContext';
 
 export default function Home() {
+  const { startLoading, stopLoading } = useLoading();
+  const [demoTime, setDemoTime] = useState(3);
+
   useEffect(() => {
     // Only run on client side
     if (typeof window !== 'undefined') {
@@ -28,6 +32,13 @@ export default function Home() {
       });
     }
   }, []);
+
+  const handleDemoLoader = () => {
+    startLoading();
+    setTimeout(() => {
+      stopLoading();
+    }, demoTime * 1000);
+  };
 
   return (
     <main>

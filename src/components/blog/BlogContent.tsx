@@ -61,7 +61,6 @@ export default function BlogContent() {
 
   return (
     <AnimatePresence>
-      {isLoaded && (
         <motion.main
           variants={containerVariants}
           initial="hidden"
@@ -169,7 +168,6 @@ export default function BlogContent() {
             </section>
           </div>
         </motion.main>
-      )}
     </AnimatePresence>
   );
 } 

@@ -32,8 +32,8 @@ export default function Footer() {
               <FooterLink href="/">Home</FooterLink>
               <FooterLink href="/about">About</FooterLink>
               <FooterLink href="/services">Services</FooterLink>
-              <FooterLink href="/portfolio">Portfolio</FooterLink>
-              <FooterLink href="/community">Community</FooterLink>
+              <FooterLink href="/blog">Blog</FooterLink>
+              <FooterLink href="/contact">Contact</FooterLink>
             </ul>
           </div>
           
@@ -41,11 +41,11 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold text-lg mb-4">Our Services</h3>
             <ul className="space-y-2">
-              <FooterLink href="/services/web-development">Web Development</FooterLink>
-              <FooterLink href="/services/mobile-apps">Mobile Apps</FooterLink>
-              <FooterLink href="/services/branding">Branding</FooterLink>
-              <FooterLink href="/services/mentorship">Mentorship</FooterLink>
-              <FooterLink href="/services/consulting">Consulting</FooterLink>
+              <FooterLink href="/services">Web Development</FooterLink>
+              <FooterLink href="/services">Mobile Apps</FooterLink>
+              <FooterLink href="/services">Branding</FooterLink>
+              <FooterLink href="/services">Mentorship</FooterLink>
+              <FooterLink href="/services">Consulting</FooterLink>
             </ul>
           </div>
           

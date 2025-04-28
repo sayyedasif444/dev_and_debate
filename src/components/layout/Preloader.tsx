@@ -9,166 +9,91 @@ export default function Preloader() {
   const [animationComplete, setAnimationComplete] = useState(false);
 
   useEffect(() => {
-    // Disable scrolling at start
     document.body.style.overflow = 'hidden';
     
-    // Simulate progressive loading
     const interval = setInterval(() => {
       setProgress((prev) => {
-        const newProgress = prev + Math.random() * 10;
+        const newProgress = prev + Math.random() * 15;
         if (newProgress >= 100) {
           clearInterval(interval);
-          
-          // Once progress reaches 100%, start the fade-out sequence after a short delay
+          setLoading(false);
           setTimeout(() => {
-            setLoading(false);
-            
-            // After the fade-out animation completes, set animationComplete to true
-            setTimeout(() => {
-              setAnimationComplete(true);
-              // Enable scrolling when animation is complete
-              document.body.style.overflow = 'visible';
-            }, 800); // Match this to the fade-out animation duration
-          }, 500); // Short delay after reaching 100%
-          
+            setAnimationComplete(true);
+            document.body.style.overflow = 'visible';
+          }, 500);
           return 100;
         }
         return newProgress;
       });
-    }, 150);
+    }, 100);
 
     return () => {
       clearInterval(interval);
-      // Ensure scrolling is re-enabled if component unmounts
       document.body.style.overflow = 'visible';
     };
   }, []);
 
-  // If animation is complete, don't render anything
   if (animationComplete) return null;
 
   return (
     <AnimatePresence>
       {!animationComplete && (
         <motion.div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black"
-          initial={{ opacity: 1 }}
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm"
+          initial={{ opacity: 0 }}
           animate={{ opacity: loading ? 1 : 0 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: 'easeInOut' }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
           onAnimationComplete={() => {
             if (!loading) {
               document.body.style.overflow = 'visible';
             }
           }}
         >
-          {/* Creative geometric shape animation */}
-          <div className="relative w-40 h-40 mb-8">
-            {/* Rotating outer circle */}
+          <div className="relative w-32 h-32">
+            {/* Main rotating ring */}
             <motion.div
-              className="absolute inset-0 border-4 border-transparent border-t-blue-500 border-r-purple-500 rounded-full"
+              className="absolute inset-0 rounded-full border-2 border-transparent border-t-blue-400/80"
               animate={{ rotate: 360 }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            />
+            
+            {/* Secondary rotating ring */}
+            <motion.div
+              className="absolute inset-2 rounded-full border-2 border-transparent border-t-white/40"
+              animate={{ rotate: -360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             />
             
-            {/* Counter-rotating middle circle */}
+            {/* Center logo */}
             <motion.div
-              className="absolute inset-3 border-4 border-transparent border-b-cyan-400 border-l-indigo-500 rounded-full"
-              animate={{ rotate: -360 }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            />
-            
-            {/* Pulsing inner circle with logo */}
-            <motion.div
-              className="absolute inset-7 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center"
-              animate={{ 
-                scale: [1, 1.1, 1],
-                boxShadow: [
-                  '0 0 10px rgba(59, 130, 246, 0.5)',
-                  '0 0 20px rgba(59, 130, 246, 0.7)',
-                  '0 0 10px rgba(59, 130, 246, 0.5)'
-                ]
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute inset-0 flex items-center justify-center"
+              animate={{ scale: [0.95, 1.05, 0.95] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
-              <motion.div
-                className="text-white text-2xl font-bold"
-                animate={{ 
-                  rotate: [0, 15, -15, 0],
-                  scale: [1, 1.1, 1.1, 1]
-                }}
-                transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-              >
-                D&D
-              </motion.div>
+              <div className="text-xl font-light text-white/90">D&D</div>
             </motion.div>
-            
-            {/* Orbiting dots */}
-            {[...Array(6)].map((_, i) => {
-              const angle = (i * 60) * (Math.PI / 180);
-              const radius = 80;
-              const x = Math.cos(angle) * radius;
-              const y = Math.sin(angle) * radius;
-              
-              return (
-                <motion.div
-                  key={i}
-                  className="absolute w-3 h-3 bg-white rounded-full"
-                  style={{
-                    top: 'calc(50% - 6px)',
-                    left: 'calc(50% - 6px)',
-                    backgroundImage: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
-                  }}
-                  animate={{
-                    x: [x * 0.6, x, x * 0.6],
-                    y: [y * 0.6, y, y * 0.6],
-                    opacity: [0.5, 1, 0.5],
-                    scale: [0.8, 1.2, 0.8]
-                  }}
-                  transition={{
-                    duration: 3,
-                    delay: i * 0.2,
-                    repeat: Infinity,
-                    repeatType: "reverse" as const
-                  }}
-                />
-              );
-            })}
           </div>
           
-          {/* Progress text and percentage */}
-          <motion.div
-            className="text-center mb-4"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            <h2 className="text-xl font-medium text-white mb-1">
-              {progress < 100 ? 'Loading...' : 'Ready!'}
-            </h2>
-            <p className="text-sm text-blue-400">
-              {Math.round(progress)}%
-            </p>
-          </motion.div>
-          
-          {/* Progress bar */}
-          <motion.div className="w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500"
-              style={{ width: `${progress}%` }}
-              initial={{ width: '0%' }}
-              // We don't need animate here since we're controlling width directly
-            />
-          </motion.div>
-          
-          {/* Loading message */}
-          <motion.p
-            className="text-gray-400 text-xs mt-4 max-w-xs text-center"
+          {/* Subtle progress indicator */}
+          <motion.div 
+            className="mt-8 flex flex-col items-center"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.2 }}
           >
-            Building digital presence that stands out
-          </motion.p>
+            <div className="h-0.5 w-32 bg-white/10 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-blue-400/50 rounded-full"
+                initial={{ width: '0%' }}
+                animate={{ width: `${progress}%` }}
+                transition={{ ease: 'easeInOut' }}
+              />
+            </div>
+            <p className="mt-2 text-xs font-light text-white/50">
+              {progress < 100 ? 'Loading' : 'Ready'}
+            </p>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
