@@ -45,12 +45,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(var(--primary-rgb), 0.6);
+  background: rgb(38, 38, 38);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(var(--primary-rgb), 0.8);
+  background: rgb(64, 64, 64);
 }
 
 /* Additional utility classes */

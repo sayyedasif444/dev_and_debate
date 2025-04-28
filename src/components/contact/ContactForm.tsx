@@ -83,7 +83,7 @@ export default function ContactForm() {
   };
 
   return (
-    <Section className="py-24 bg-gradient-to-br from-dark via-black to-dark/80">
+    <Section id="contact-form" className="py-24 bg-gradient-to-br from-dark via-black to-dark/80">
       <div className="relative z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -210,10 +210,10 @@ export default function ContactForm() {
                         value={formData.message}
                         onChange={handleChange}
                         rows={6}
-                        className={`w-full bg-black/50 border ${errors.message ? 'border-red-500' : 'border-gray-700'} rounded-lg p-3 pl-10 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all`}
+                        className={`w-full bg-black/50 border ${errors.message ? 'border-red-500' : 'border-gray-700'} rounded-lg p-3 pl-10 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all resize-none`}
                         placeholder="Tell us about your project or question..."
                       ></textarea>
-                      <div className="absolute left-3 top-3.5 text-primary/70">
+                      <div className="absolute left-3 top-3 text-primary/70">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                         </svg>
@@ -222,11 +222,13 @@ export default function ContactForm() {
                     </div>
                   </div>
                   
-                  <div className="text-center">
+                  <div className="flex justify-center">
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex items-center justify-center px-8 py-4 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition-all duration-300 relative overflow-hidden shadow-lg shadow-primary/20 disabled:opacity-70 disabled:cursor-not-allowed"
+                      className={`px-8 py-4 bg-primary hover:bg-primary/90 text-white font-medium rounded-xl transition-all duration-300 flex items-center gap-2 ${
+                        submitting ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
                     >
                       {submitting ? (
                         <>
@@ -239,7 +241,7 @@ export default function ContactForm() {
                       ) : (
                         <>
                           Send Message
-                          <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
                         </>
@@ -251,29 +253,28 @@ export default function ContactForm() {
             </motion.div>
           ) : (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="max-w-2xl mx-auto bg-gradient-to-br from-black/80 to-black/40 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-xl text-center p-10"
+              className="max-w-3xl mx-auto text-center"
             >
-              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-primary/20 flex items-center justify-center">
-                <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+              <div className="bg-gradient-to-br from-black/80 to-black/40 backdrop-blur-sm border border-white/10 rounded-xl p-8 md:p-10">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">Message Sent Successfully!</h3>
+                <p className="text-gray-300 mb-6">
+                  Thank you for reaching out. We'll get back to you within 24 hours.
+                </p>
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="px-6 py-3 bg-primary/10 hover:bg-primary/20 text-primary font-medium rounded-lg transition-all duration-300"
+                >
+                  Send Another Message
+                </button>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Message Sent Successfully!</h3>
-              <p className="text-gray-300 mb-8">
-                Thank you for reaching out. We've received your message and will get back to you shortly.
-              </p>
-              <button
-                onClick={() => setSubmitted(false)}
-                className="inline-flex items-center px-6 py-3 bg-primary/20 text-primary hover:bg-primary/30 rounded-lg transition-colors"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Send Another Message
-              </button>
             </motion.div>
           )}
         </div>

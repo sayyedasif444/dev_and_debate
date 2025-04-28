@@ -3,6 +3,22 @@
 import { motion } from 'framer-motion';
 
 export default function Hero() {
+  const scrollToForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const formElement = document.getElementById('contact-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const scrollToScheduleCall = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const scheduleCallElement = document.getElementById('schedule-call');
+    if (scheduleCallElement) {
+      scheduleCallElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="py-24 lg:py-32 bg-black relative overflow-hidden">
       {/* Enhanced Background decoration */}
@@ -53,7 +69,7 @@ export default function Hero() {
         />
       </div>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 relative z-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -93,18 +109,23 @@ export default function Hero() {
           >
             <a 
               href="#contact-form" 
-              className="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-medium rounded-xl transition-all duration-300 flex items-center gap-2"
+              onClick={scrollToForm}
+              className="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-medium rounded-xl transition-all duration-300 flex items-center gap-2 group"
             >
               <span>Start a Conversation</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 transform transition-transform duration-300 group-hover:translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </svg>
             </a>
             <a 
               href="#schedule-call" 
-              className="px-8 py-4 bg-transparent hover:bg-white/5 border border-white/20 text-white font-medium rounded-xl transition-all duration-300"
+              onClick={scrollToScheduleCall}
+              className="px-8 py-4 bg-transparent hover:bg-white/5 border border-white/20 text-white font-medium rounded-xl transition-all duration-300 flex items-center gap-2 group"
             >
-              Schedule a Call
+              <span>Schedule a Call</span>
+              <svg className="w-5 h-5 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
             </a>
           </motion.div>
         </div>
