@@ -56,13 +56,24 @@ You must:
     });
 
     const html = response.choices[0].message.content.trim();
+    
+    if (!html) {
+      throw new Error('Failed to generate blog content - received empty response');
+    }
+    
+    const wordCount = estimateWordCount(html);
+    if (wordCount < 100) {
+      throw new Error(`Generated blog content is too short (${wordCount} words) - expected at least 1000 words`);
+    }
+    
     return {
       html,
-      wordCount: estimateWordCount(html),
+      wordCount,
     };
   } catch (error) {
     console.error('Blog generation failed:', error);
-    return { html: '', wordCount: 0 };
+    // Throw the error instead of returning empty content
+    throw new Error(`Failed to write blog sections: ${error.message}`);
   }
 }
 

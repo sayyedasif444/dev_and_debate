@@ -4,7 +4,7 @@ import { evaluateAndRateBlog } from '@/lib/agents/evaluateAndRateBlog';
 import { rewriteBlogWithFeedback } from '@/lib/agents/rewriteBlog';
 import { generateSearchQuery } from '@/lib/agents/generateImageSearchQuery';
 import { findRelevantImages } from '@/lib/agents/findRelevantImages';
-import { createJob, updateJobStatus, removeJobFromFirestore } from '@/lib/blog-job-manager';
+import { createJob, updateJobStatus, removeJobFromFirestore, jobExists } from '@/lib/blog-job-manager';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -72,24 +72,57 @@ async function processBlogGeneration(trackingId, idea, tone) {
     // Step 1: Get trending topic (20% progress)
     await updateJobStatus(trackingId, 'inprogress', 20, 'Generating trending topic and title...');
     const title = await getTrendingTopicFromIdea(idea);
+    if (!title) {
+      throw new Error('Failed to generate blog title');
+    }
     console.log(`🔍 Generated title: ${title}`);
 
     // Step 2: Write initial blog content (40% progress)
     await updateJobStatus(trackingId, 'inprogress', 40, 'Writing initial blog content...');
     let blog = await writeBlogSections(title, tone);
+    if (!blog || !blog.html || blog.wordCount < 100) {
+      throw new Error(`Failed to write blog content - got ${blog?.wordCount || 0} words`);
+    }
     console.log(`✍️ Initial blog written (${blog.wordCount} words)`);
 
     // Step 3: Evaluate blog (60% progress)
     await updateJobStatus(trackingId, 'inprogress', 60, 'Evaluating blog quality and content...');
     let rating = await evaluateAndRateBlog(blog.html, tone);
+    if (!rating || typeof rating.score !== 'number') {
+      throw new Error('Failed to evaluate blog quality');
+    }
     console.log(`📝 Blog rating: ${rating.score}/10`);
 
     // Step 4: Rewrite if needed (80% progress)
     if (rating.score < 8 || blog.wordCount < 500) {
+      // Check if job still exists before rewriting
+      const jobStillExists = await jobExists(trackingId);
+      console.log(`🔍 Before rewrite - Job ${trackingId} exists: ${jobStillExists}`);
+      
+      if (!jobStillExists) {
+        throw new Error('Job was removed during blog generation process');
+      }
+      
       await updateJobStatus(trackingId, 'inprogress', 70, 'Rewriting blog to improve quality...');
       console.log('🔄 Rewriting blog due to low score or short content...');
+      
       blog = await rewriteBlogWithFeedback(blog, rating.review, tone, title);
+      if (!blog || !blog.html || blog.wordCount < 100) {
+        throw new Error(`Failed to rewrite blog - got ${blog?.wordCount || 0} words`);
+      }
+      
+      // Check if job still exists after rewriting
+      const jobStillExistsAfterRewrite = await jobExists(trackingId);
+      console.log(`🔍 After rewrite - Job ${trackingId} exists: ${jobStillExistsAfterRewrite}`);
+      
+      if (!jobStillExistsAfterRewrite) {
+        throw new Error('Job was removed during blog rewriting process');
+      }
+      
       rating = await evaluateAndRateBlog(blog.html, tone);
+      if (!rating || typeof rating.score !== 'number') {
+        throw new Error('Failed to evaluate rewritten blog');
+      }
       console.log(`✅ Rewritten blog (${blog.wordCount} words, score: ${rating.score}/10)`);
     } else {
       await updateJobStatus(trackingId, 'inprogress', 70, 'Blog quality is good, skipping rewrite...');
@@ -98,7 +131,14 @@ async function processBlogGeneration(trackingId, idea, tone) {
     // Step 5: Generate images (90% progress)
     await updateJobStatus(trackingId, 'inprogress', 90, 'Generating relevant images...');
     const searchQuery = await generateSearchQuery(title, blog.html);
+    if (!searchQuery) {
+      throw new Error('Failed to generate image search query');
+    }
+    
     const images = await findRelevantImages(searchQuery);
+    if (!images || images.length === 0) {
+      throw new Error('Failed to find relevant images');
+    }
     console.log(`🖼️ Generated ${images.length} images`);
 
     // Step 6: Complete (100% progress)
@@ -114,28 +154,22 @@ async function processBlogGeneration(trackingId, idea, tone) {
 
   } catch (error) {
     console.error(`❌ Blog generation failed for ${trackingId}:`, error);
-    await updateJobStatus(trackingId, 'failed', 0, `Blog generation failed: ${error.message}`, { error: error.message });
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    
+    // Update job status with detailed error information
+    await updateJobStatus(trackingId, 'failed', 0, `Blog generation failed: ${error.message}`, { 
+      error: error.message,
+      errorType: error.name,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Re-throw the error to ensure the process stops
+    throw error;
   }
 }
 
-// API endpoint to get job status
-export async function getJobStatus(trackingId) {
-  try {
-    const { getJobStatus: getJobStatusFromFirebase } = await import('@/lib/blog-job-manager');
-    return await getJobStatusFromFirebase(trackingId);
-  } catch (error) {
-    console.error('❌ Error getting job status:', error);
-    return { error: 'Failed to get job status' };
-  }
-}
-
-// API endpoint to get all jobs
-export async function getAllJobs() {
-  try {
-    const { getAllJobs: getAllJobsFromFirebase } = await import('@/lib/blog-job-manager');
-    return await getAllJobsFromFirebase();
-  } catch (error) {
-    console.error('❌ Error getting all jobs:', error);
-    return [];
-  }
-} 
+ 

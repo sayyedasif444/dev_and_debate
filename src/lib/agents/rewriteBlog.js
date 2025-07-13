@@ -51,16 +51,24 @@ Please rewrite it using the above rules.`;
     });
 
     const html = response.choices[0].message.content.trim();
+    
+    if (!html) {
+      throw new Error('Failed to rewrite blog - received empty response');
+    }
+    
+    const wordCount = estimateWordCount(html);
+    if (wordCount < 100) {
+      throw new Error(`Rewritten blog content is too short (${wordCount} words) - expected at least 1000 words`);
+    }
+    
     return {
       html,
-      wordCount: estimateWordCount(html),
+      wordCount,
     };
   } catch (error) {
     console.error('❌ Rewrite failed:', error);
-    return {
-      html: [blog.html].map(p => `<p>${p}</p>`).join('\n'),
-      wordCount: estimateWordCount(blog.html),
-    };
+    // Throw the error instead of returning original content
+    throw new Error(`Failed to rewrite blog with feedback: ${error.message}`);
   }
 }
 

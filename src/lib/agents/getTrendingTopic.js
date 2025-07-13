@@ -28,6 +28,9 @@ export async function getTrendingTopicFromIdea(idea) {
     
     const title = completion.choices[0].message.content.trim();
     
+    if (!title) {
+      throw new Error('Failed to generate blog title - received empty response');
+    }
     
     return title;
   } catch (error) {
@@ -40,6 +43,7 @@ export async function getTrendingTopicFromIdea(idea) {
       console.error('OpenAI API response error:', error.response.data);
     }
     
-    return null;
+    // Throw the error instead of returning null
+    throw new Error(`Failed to generate trending topic: ${error.message}`);
   }
 }

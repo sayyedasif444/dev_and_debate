@@ -1,4 +1,4 @@
-import { getJobStatus, getAllJobs } from './generate-async';
+import { getJobStatus, getAllJobs } from '@/lib/blog-job-manager';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {

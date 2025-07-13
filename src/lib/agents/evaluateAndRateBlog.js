@@ -42,10 +42,20 @@ Give your rating from 1 to 10 and a short review (2-3 lines). Respond strictly i
 
     const raw = result.choices[0].message.content.trim();
 
+    if (!raw) {
+      throw new Error('Failed to evaluate blog - received empty response');
+    }
+
     const json = JSON.parse(raw);
+    
+    if (!json.score || !json.review) {
+      throw new Error('Invalid evaluation response - missing score or review');
+    }
+    
     return json;
   } catch (error) {
     console.error('Rating agent failed:', error);
-    return { score: 0, review: 'Evaluation failed.' };
+    // Throw the error instead of returning default values
+    throw new Error(`Failed to evaluate and rate blog: ${error.message}`);
   }
 }
