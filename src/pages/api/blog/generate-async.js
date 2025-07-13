@@ -4,44 +4,7 @@ import { evaluateAndRateBlog } from '@/lib/agents/evaluateAndRateBlog';
 import { rewriteBlogWithFeedback } from '@/lib/agents/rewriteBlog';
 import { generateSearchQuery } from '@/lib/agents/generateImageSearchQuery';
 import { findRelevantImages } from '@/lib/agents/findRelevantImages';
-import fs from 'fs';
-import path from 'path';
-
-// File-based storage for blog generation jobs
-const JOBS_FILE = path.join(process.cwd(), 'data', 'blog-jobs.json');
-
-// Ensure data directory exists
-const ensureDataDir = () => {
-  const dataDir = path.dirname(JOBS_FILE);
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-};
-
-// Load jobs from file
-const loadJobs = () => {
-  ensureDataDir();
-  if (!fs.existsSync(JOBS_FILE)) {
-    return {};
-  }
-  try {
-    const data = fs.readFileSync(JOBS_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error loading jobs:', error);
-    return {};
-  }
-};
-
-// Save jobs to file
-const saveJobs = (jobs) => {
-  ensureDataDir();
-  try {
-    fs.writeFileSync(JOBS_FILE, JSON.stringify(jobs, null, 2));
-  } catch (error) {
-    console.error('Error saving jobs:', error);
-  }
-};
+import { createJob, updateJobStatus, removeJobFromFirestore } from '@/lib/blog-job-manager';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -74,10 +37,8 @@ export default async function handler(req, res) {
       rating: null
     };
 
-    // Store initial job in file
-    const jobs = loadJobs();
-    jobs[trackingId] = initialJob;
-    saveJobs(jobs);
+    // Store initial job in Firestore
+    await createJob(initialJob);
 
     console.log(`🚀 Created job ${trackingId} for idea: ${idea}`);
 
@@ -157,59 +118,11 @@ async function processBlogGeneration(trackingId, idea, tone) {
   }
 }
 
-// Helper function to update job status in file
-async function updateJobStatus(trackingId, status, progress, message, data = {}) {
-  try {
-    const jobs = loadJobs();
-    if (jobs[trackingId]) {
-      jobs[trackingId] = {
-        ...jobs[trackingId],
-        status,
-        progress,
-        message,
-        updatedAt: new Date().toISOString(),
-        ...data
-      };
-      saveJobs(jobs);
-      console.log(`📊 Job ${trackingId}: ${status} (${progress}%) - ${message}`);
-      
-      // Remove completed or failed jobs after a delay
-      if (status === 'completed' || status === 'failed') {
-        setTimeout(() => {
-          removeJobFromFile(trackingId);
-        }, 30000); // Remove after 30 seconds
-      }
-    }
-  } catch (error) {
-    console.error(`❌ Failed to update job status for ${trackingId}:`, error);
-  }
-}
-
-// Helper function to remove job from file
-const removeJobFromFile = (trackingId) => {
-  try {
-    const jobs = loadJobs();
-    if (jobs[trackingId]) {
-      delete jobs[trackingId];
-      saveJobs(jobs);
-      console.log(`🗑️ Removed completed job ${trackingId} from file`);
-    }
-  } catch (error) {
-    console.error(`❌ Failed to remove job ${trackingId} from file:`, error);
-  }
-};
-
 // API endpoint to get job status
 export async function getJobStatus(trackingId) {
   try {
-    const jobs = loadJobs();
-    const job = jobs[trackingId];
-    
-    if (!job) {
-      return { error: 'Job not found' };
-    }
-    
-    return job;
+    const { getJobStatus: getJobStatusFromFirebase } = await import('@/lib/blog-job-manager');
+    return await getJobStatusFromFirebase(trackingId);
   } catch (error) {
     console.error('❌ Error getting job status:', error);
     return { error: 'Failed to get job status' };
@@ -219,11 +132,8 @@ export async function getJobStatus(trackingId) {
 // API endpoint to get all jobs
 export async function getAllJobs() {
   try {
-    const jobs = loadJobs();
-    const jobsArray = Object.values(jobs);
-    
-    // Sort by creation date (newest first)
-    return jobsArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const { getAllJobs: getAllJobsFromFirebase } = await import('@/lib/blog-job-manager');
+    return await getAllJobsFromFirebase();
   } catch (error) {
     console.error('❌ Error getting all jobs:', error);
     return [];

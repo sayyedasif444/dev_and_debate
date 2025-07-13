@@ -1,41 +1,4 @@
-import fs from 'fs';
-import path from 'path';
-
-// File-based storage for blog generation jobs
-const JOBS_FILE = path.join(process.cwd(), 'data', 'blog-jobs.json');
-
-// Ensure data directory exists
-const ensureDataDir = () => {
-  const dataDir = path.dirname(JOBS_FILE);
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-};
-
-// Load jobs from file
-const loadJobs = () => {
-  ensureDataDir();
-  if (!fs.existsSync(JOBS_FILE)) {
-    return {};
-  }
-  try {
-    const data = fs.readFileSync(JOBS_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error loading jobs:', error);
-    return {};
-  }
-};
-
-// Save jobs to file
-const saveJobs = (jobs) => {
-  ensureDataDir();
-  try {
-    fs.writeFileSync(JOBS_FILE, JSON.stringify(jobs, null, 2));
-  } catch (error) {
-    console.error('Error saving jobs:', error);
-  }
-};
+import { getAllJobs, removeJobFromFirestore } from '@/lib/blog-job-manager';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -43,29 +6,26 @@ export default async function handler(req, res) {
   }
 
   try {
-    const jobs = loadJobs();
-    const initialCount = Object.keys(jobs).length;
+    const jobs = await getAllJobs();
+    const initialCount = jobs.length;
     
     // Remove completed and failed jobs
     const currentTime = new Date();
-    const jobsToKeep = {};
+    let removedCount = 0;
     
-    for (const [trackingId, job] of Object.entries(jobs)) {
+    for (const job of jobs) {
       const jobTime = new Date(job.updatedAt || job.createdAt);
       const hoursSinceUpdate = (currentTime - jobTime) / (1000 * 60 * 60);
       
-      // Keep jobs that are:
-      // 1. Still in progress (init, inprogress)
-      // 2. Completed/failed but less than 1 hour old
-      if (job.status === 'init' || job.status === 'inprogress' || hoursSinceUpdate < 1) {
-        jobsToKeep[trackingId] = job;
+      // Remove jobs that are:
+      // 1. Completed/failed and more than 1 hour old
+      if ((job.status === 'completed' || job.status === 'failed') && hoursSinceUpdate >= 1) {
+        await removeJobFromFirestore(job.trackingId);
+        removedCount++;
       }
     }
     
-    const finalCount = Object.keys(jobsToKeep).length;
-    const removedCount = initialCount - finalCount;
-    
-    saveJobs(jobsToKeep);
+    const finalCount = initialCount - removedCount;
     
     return res.status(200).json({
       success: true,
