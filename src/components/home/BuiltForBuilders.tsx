@@ -143,15 +143,14 @@ export default function BuiltForBuilders() {
             }
             description="Free tools and utilities we're building to help developers and creators work more efficiently."
             features={[
-              "Code snippets manager",
-              "Project management templates",
-              "SEO audit helper",
-              "Content idea generator"
+              "Blog Content Generator - AI-powered content creation",
+              "Code Snippets Manager - Smart code organization",
+              "Project Management Templates - Agile & Scrum tools",
+              "SEO Audit Helper - Quick SEO optimization"
             ]}
-            ctaText="Coming Soon"
-            ctaLink="#"
+            ctaText="Explore Tools"
+            ctaLink="/our-work"
             delay={0.2}
-            isComingSoon={true}
           />
         </div>
       </div>
