@@ -5,6 +5,41 @@ import ProjectPageClient from './ProjectPageClient';
 
 // Project data - in a real app, this would come from a database or API
 const projectsData = {
+  'platform-commons': {
+    name: 'Platform Commons',
+    tagline: 'Tech for Good - Empowering 7 Million People Globally',
+    description: 'Platform Commons is a comprehensive digital ecosystem that builds systemic solutions for pressing social issues by accelerating the missions of entrepreneurs, governments, and global initiatives. They blend technology for good with human action to create more equitable, participative, and inclusive societies.',
+    challenge: 'Social innovators, NGOs, and government organizations often lack access to affordable, purpose-built technology solutions. Traditional software is either too expensive, too generic, or doesn\'t address the unique needs of the impact sector. This creates barriers to scaling social impact and reaching more beneficiaries.',
+    solution: 'Platform Commons created a comprehensive suite of 15+ SaaS products exclusively designed for the Impact Sector. Their platforms cover Civic Engagement, Education Technology, Agriculture Technology, and Job Technology, all built with the specific needs of social organizations in mind.',
+    image: '/images/projects/platform-commons.jpg',
+    gallery: [
+      '/images/projects/platform-commons-1.jpg',
+      '/images/projects/platform-commons-2.jpg',
+      '/images/projects/platform-commons-3.jpg'
+    ],
+    results: [
+      '7+ million users and beneficiaries globally',
+      '200+ partner organizations across 16 Indian states',
+      '15+ SaaS products built exclusively for Impact Sector',
+      'Comprehensive platform ecosystem covering Civic, Education, Agriculture, and Job Tech'
+    ],
+    techStack: ['React', 'Node.js', 'MongoDB', 'AWS', 'Blockchain', 'AI/ML'],
+    features: [
+      'Civic Engagement Platform with volunteer management',
+      'Education Technology Platform with school transformation tools',
+      'Agriculture Technology Platform for farmers',
+      'Job Technology Platform for employment',
+      'Strategy & Consulting services',
+      'Custom Software Development for nonprofits'
+    ],
+    testimonial: {
+      quote: "Platform Commons has revolutionized how we approach digital transformation in the social sector. Their platforms are not just tools, but complete ecosystems that understand the unique challenges of impact organizations.",
+      author: "Prashant Mehra",
+      title: "Digital Livelihood Platforms Lead"
+    },
+    callToAction: 'Visit Platform Commons',
+    ctaLink: 'https://platformcommons.org'
+  },
   'quicklaunch': {
     name: 'QuickLaunch – Portfolio Starter Pack',
     tagline: 'Launch your digital presence in hours, not weeks',

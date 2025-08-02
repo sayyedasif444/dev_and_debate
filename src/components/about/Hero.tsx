@@ -153,7 +153,7 @@ export default function Hero() {
                 transition={{ duration: 0.5, delay: 0.8 }}
                 className="text-3xl sm:text-4xl font-bold text-primary mb-2"
               >
-                50+
+                15+
               </motion.div>
               <div className="text-gray-400 text-sm sm:text-base">Projects Delivered</div>
             </div>
@@ -181,12 +181,12 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* CTA buttons */}
+          {/* CTA button */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-6"
+            className="flex flex-col items-center justify-center"
           >
             <motion.a 
               href="#our-mission" 
@@ -206,25 +206,6 @@ export default function Hero() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </motion.svg>
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </motion.a>
-            
-            <motion.a 
-              href="#team" 
-              className="group relative px-10 py-5 bg-transparent hover:bg-white/5 border-2 border-white/20 hover:border-primary/30 text-white font-semibold rounded-2xl transition-all duration-300 flex items-center gap-3 backdrop-blur-sm"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span>Meet the Team</span>
-              <motion.svg 
-                className="w-6 h-6" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-                animate={{ x: [0, 3, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </motion.svg>
             </motion.a>
           </motion.div>
 

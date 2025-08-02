@@ -52,7 +52,7 @@ export default function Explore() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="py-20  relative overflow-hidden bg-transparent">
+    <section className="py-10  relative overflow-hidden bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div

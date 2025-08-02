@@ -147,23 +147,23 @@ export default function Hero() {
       </motion.div>
 
       {/* Content */}
-      <div ref={ref} className="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-center">
+      <div ref={ref} className="relative z-10 w-full px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-12 xl:py-16 pt-8 sm:pt-12 lg:pt-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-12 items-center">
             {/* Left Column - Text Content */}
             <div className="relative lg:col-span-3">
               <motion.div
                 initial={{ width: 0 }}
-                animate={{ width: inView ? "150px" : 0 }}
+                animate={{ width: inView ? "100px" : 0 }}
                 transition={{ duration: 1, delay: 0.2 }}
-                className="h-[1px] bg-white/20 mb-8"
+                className="h-[1px] bg-white/20 mb-4 sm:mb-6"
               />
 
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
                 transition={{ duration: 0.5 }}
-                className="text-sm uppercase tracking-[0.4em] text-gray-200 mb-4 font-medium"
+                className="text-sm uppercase tracking-[0.4em] text-gray-200 mb-3 sm:mb-4 font-medium"
               >
                 Dev And Debate
               </motion.p>
@@ -172,12 +172,12 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-3xl sm:text-4xl lg:text-[2.5rem] !leading-[1.4] font-bold text-white mb-6"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] !leading-[1.3] sm:!leading-[1.4] font-bold text-white mb-4 sm:mb-6"
               >
                 Where Code Meets <span className="text-primary relative inline-block">
                   Creativity
                   <motion.svg 
-                    className="absolute -bottom-2 left-0 w-full" 
+                    className="absolute -bottom-1 sm:-bottom-2 left-0 w-full" 
                     viewBox="0 0 200 8" 
                     xmlns="http://www.w3.org/2000/svg" 
                     initial={{ pathLength: 0, opacity: 0 }}
@@ -187,11 +187,11 @@ export default function Hero() {
                     <path d="M 0 5 C 50 0, 150 0, 200 5" stroke="currentColor" strokeWidth="2" fill="none" className="text-primary" />
                   </motion.svg>
                 </span>
-                <br className="my-4" />
+                <br className="hidden sm:block" />
                 {" "}& Conversations Spark <span className="text-primary relative inline-block">
                   Innovation!
                   <motion.svg 
-                    className="absolute -bottom-2 left-0 w-full" 
+                    className="absolute -bottom-1 sm:-bottom-2 left-0 w-full" 
                     viewBox="0 0 200 8" 
                     xmlns="http://www.w3.org/2000/svg" 
                     initial={{ pathLength: 0, opacity: 0 }}
@@ -207,7 +207,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-lg sm:text-xl text-gray-400 mb-4 sm:mb-4 max-w-2xl leading-relaxed"
+                className="text-base sm:text-lg lg:text-xl text-gray-400 mb-3 sm:mb-4 max-w-2xl leading-relaxed"
               >
                 Build your ideas, grow your skills, and dive into creative conversations—whether it's tech, storytelling, or strategy, we explore and evolve together at Dev & Debate
               </motion.p>
@@ -216,7 +216,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
-                className="text-lg sm:text-xl text-gray-400 mb-8 sm:mb-12 max-w-2xl leading-relaxed"
+                className="text-base sm:text-lg lg:text-xl text-gray-400 mb-6 sm:mb-8 max-w-2xl leading-relaxed"
               >
                 Whether you're here to sharpen your skills, build a strong digital presence, or find strategic support for your organization — we're ready to build and grow with you.
               </motion.p>
@@ -225,7 +225,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="flex flex-col gap-4 sm:gap-6 w-full max-w-2xl"
+                className="flex flex-col gap-3 sm:gap-4 lg:gap-6 w-full max-w-2xl"
               >
                 <motion.a 
                   href="/services" 
