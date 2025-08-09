@@ -340,6 +340,13 @@ export default function WorkShowcase() {
       delay: 0.1
     },
     {
+      title: "Billing Tool",
+      icon: "💰",
+      description: "Comprehensive business management and invoicing solution. Manage businesses, products, and sales with ease.",
+      toolUrl: "https://billing-tool.devanddebate.com/",
+      delay: 0.15
+    },
+    {
       title: "Code Snippets Manager",
       icon: "💻",
       description: "Save and organize your code snippets with smart search and team sharing capabilities.",
